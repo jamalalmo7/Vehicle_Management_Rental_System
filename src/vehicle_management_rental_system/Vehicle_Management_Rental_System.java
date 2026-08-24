@@ -16,17 +16,28 @@ public class Vehicle_Management_Rental_System {
 //        System.out.println(v1.toString());
 //    testing the details function    
         
-//        VehicleManager addv = new VehicleManager();
-//        addv.addVehicle(1,VehicleType.CAR,"toyota","camry", 2020, 50,VehicleStatus.AVAILABLE);
-//        
-//        
-//        VehicleManager addv2 = new VehicleManager();
-//        addv.addVehicle(1,VehicleType.TRUCK,"MARRRR","DONNN", 4444, 50,VehicleStatus.AVAILABLE);
-//        
+      VehicleManager addv = new VehicleManager();
+       addv.addVehicle(1,VehicleType.CAR,"toyota","camry", 2020, 50,VehicleStatus.AVAILABLE);
+       
+      
+       VehicleManager addv2 = new VehicleManager();
+       addv.addVehicle(2,VehicleType.TRUCK,"MARRRR","DONNN", 4444, 50,VehicleStatus.AVAILABLE);     
 // Testing the addVehicle function in VehicleManager
-        
-        
-        
+//      addv.searchVehicle(1);
+//    Vehicle vehicle = new Vehicle();
+//    vehicle = addv.searchVehicle(1);
+//     
+//    addv.updateVehicle(vehicle,VehicleType.CAR,"toyota","JEEMA", 2025, 5099,VehicleStatus.RENTED);
+//testing the new function update with search assosiated with the initialization of the objects above 
+//=======================================================
+ //
+//  System.out.println(addv.getAvailableVehicles());
+  //   Testing getAvailableVehicles funcion ================
+    
+    
+  
+  
+    
     }
     
 }

@@ -11,6 +11,8 @@ public class Vehicle {
     private double pricePerDay;
     private VehicleStatus status; // enum
     
+    public Vehicle(){}
+    
     public Vehicle
     (int id,VehicleType type, String brand,String model,int year,
             double pricePerDay, VehicleStatus status){
