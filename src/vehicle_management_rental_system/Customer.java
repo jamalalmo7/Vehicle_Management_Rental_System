@@ -2,15 +2,15 @@
 package vehicle_management_rental_system;
 
 
-public class Customer {
+public class Customer extends User {
     private String name;
     private String phone;
     private String email;
     private String address;
     private String licenseNumber;
  
-    public Customer(/*String userName, String password, Role role,*/ String name, String phone, String email, String address, String licenseNumber) {
-        /*super(userName, password, role);*/
+    public Customer(String userName, String password, Role role, String name, String phone, String email, String address, String licenseNumber) {
+        super(userName, password, role);
         this.name = name;
         this.phone = phone;
         this.email = email;

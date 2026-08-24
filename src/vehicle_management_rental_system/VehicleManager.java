@@ -86,7 +86,7 @@ public class VehicleManager {
   
   
        //================= SEARCH VEHICLE ====================
-  public ArrayList<Vehicle> searchVehicle(String keyword){
+  public ArrayList<Vehicle> searchVehicle(String keyword){ 
       ArrayList<Vehicle> results = new ArrayList<>();
       String searchKeyword = keyword.toLowerCase();
       for (Vehicle v : vehicleList){
@@ -98,7 +98,8 @@ public class VehicleManager {
                 } 
             
             }
-     return results;
+     return results;// Possible loop in main to print attributes of this arrayOfObjects
+     
   }
        //================= GET FREE VEHICLE =====================
   public ArrayList<Vehicle> getAvailableVehicles(){
