@@ -88,12 +88,13 @@ public class VehicleManager {
        //================= SEARCH VEHICLE ====================
   public ArrayList<Vehicle> searchVehicle(String keyword){ 
       ArrayList<Vehicle> results = new ArrayList<>();
+      if (keyword == null || keyword.trim().isEmpty()){return results;}
       String searchKeyword = keyword.toLowerCase();
       for (Vehicle v : vehicleList){
-        if (v.getBrand().toLowerCase().contains(searchKeyword) ||
-            v.getModel().toLowerCase().contains(searchKeyword) || 
-            v.getType().name().toLowerCase().contains(searchKeyword))
-                {
+          boolean matchBrand = v.getBrand() != null && v.getBrand().toLowerCase().contains(searchKeyword);
+          boolean matchModel = v.getModel() != null && v.getModel().toLowerCase().contains(searchKeyword);
+          boolean matchType = v.getType() != null && v.getType().name().toLowerCase().contains(searchKeyword);
+        if (matchBrand || matchModel || matchType){
             results.add(v);
                 } 
             

@@ -88,13 +88,21 @@ public class CustomerManager {
                 return results;
                 }
         
-    
-    
-    
     public ArrayList<Customer> getAllCustomers(){
         return new ArrayList<>(customerList);
-    
-    
     }
     
+    public int getCustomerCount(){
+    return customerList.size();
+    }
+    
+    
+    //needs tracking and comprehending how it works
+    public Customer authenticateCustomer(String userName, String password){
+        Customer c = getCustomerByUsername(userName);
+        if (c!= null && c.login(userName, password)){
+        return c;
+        }
+        return null;
+    }
 }

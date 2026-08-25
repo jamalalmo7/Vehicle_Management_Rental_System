@@ -6,6 +6,7 @@ import java.time.temporal.ChronoUnit;
 
 
 public class Rental {
+    private static int idCounter = 0;
     private int rentalId; 
     private LocalDate startDate;
     private LocalDate endDate;
@@ -16,13 +17,19 @@ public class Rental {
     private Vehicle vehicle;// for knowing which car reference 
     private Payment payment;
     
+    public Rental(){}
     public Rental 
-    (int rentalId, LocalDate startDate, LocalDate endDate , double totalPrice,RentalStatus status){
-      this.rentalId = rentalId;
+    (Customer customer, Vehicle vehicle, LocalDate startDate, LocalDate endDate , double totalPrice,RentalStatus status){
+      this.rentalId = ++idCounter;
+      this.customer = customer;
+      this.vehicle = vehicle;
       this.startDate = startDate;
       this.endDate = endDate;
       this.totalPrice = totalPrice;
       this.status = status;
+      
+      
+      
         
     
     
@@ -109,7 +116,7 @@ public class Rental {
     
     }
     
-    public int calculateDuration(){
+    public static int calculateDuration(LocalDate startDate,LocalDate endDate){
     return (int) ChronoUnit.DAYS.between(startDate,endDate);
     
     }
