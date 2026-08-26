@@ -33,9 +33,10 @@ public class Vehicle_Management_Rental_System {
  //
 //  System.out.println(addv.getAvailableVehicles());
   //   Testing getAvailableVehicles funcion ================
-    
-    
   
+//    RentalManager m1 = new RentalManager();
+//        System.out.println(m1.getRentalCount());
+//  Thers is no Rental yet
   
     
     }
