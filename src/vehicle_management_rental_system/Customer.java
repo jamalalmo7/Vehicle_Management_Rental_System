@@ -3,6 +3,8 @@ package vehicle_management_rental_system;
 
 
 public class Customer extends User {
+    private static int CountId = 0;
+    private int CustomerId;
     private String name;
     private String phone;
     private String email;
@@ -11,11 +13,16 @@ public class Customer extends User {
  
     public Customer(String userName, String password, Role role, String name, String phone, String email, String address, String licenseNumber) {
         super(userName, password, role);
+        this.CustomerId = ++CountId;
         this.name = name;
         this.phone = phone;
         this.email = email;
         this.address = address;
         this.licenseNumber = licenseNumber;
+    }
+
+    public int getCustomerId() {
+        return CustomerId;
     }
 
     public String getName() {

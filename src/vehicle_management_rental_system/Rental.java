@@ -15,7 +15,6 @@ public class Rental {
     
     private Customer customer;// (has a ) relationship to reference the rental to the customer with set/get.customer
     private Vehicle vehicle;// for knowing which car reference 
-    private Payment payment;
     
     public Rental(){}
     public Rental 
@@ -91,13 +90,7 @@ public class Rental {
         this.vehicle = vehicle;
     }
     
-     public Payment getPayment() {
-        return payment;
-    }
-
-    public void setPayment(Payment payment) {
-        this.payment = payment;
-    }
+  
     
   // Above Setter/Getter for customer, vehicle,and payment
 
@@ -137,6 +130,12 @@ public class Rental {
      }
          
      }
+
+    @Override
+    public String toString() {
+        return "Rental{" + "rentalId=" + rentalId + ", startDate=" + startDate + ", endDate=" + endDate + ", totalPrice=" + totalPrice + ", status=" + status + ", customer=" + customer + ", vehicle=" + vehicle + '}';
+    }
+
     
     
     

@@ -9,7 +9,7 @@ package vehicle_management_rental_system;
  * @author Jamal Al moalemy
  */
 public enum PaymentStatus {
-    PENDING,
+  
     PAID,
     FAILED,
     REFUNDED

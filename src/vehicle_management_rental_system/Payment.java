@@ -5,20 +5,21 @@ import java.time.LocalDate;
 
 
 public class Payment {
+    private static int CountId  = 0;
     private int paymentId;
-    private int rentalId;
+    private Rental rental;
     private double amount;
     private LocalDate paymentDate;
-    private PaymentMethod paymentMethod;// Perhaps would be enum 
-    private PaymentStatus status;// Perhaps would be enum 
+    private PaymentMethod paymentMethod;// enum 
+    private PaymentStatus status;// enum 
 
-    public Payment(int paymentId, int rentalId, double amount, LocalDate paymentDate, PaymentMethod paymentMethod, PaymentStatus status) {
-        this.paymentId = paymentId;
-        this.rentalId = rentalId;
+    public Payment(Rental rental, double amount, PaymentMethod paymentMethod) {
+        this.paymentId = ++CountId;
+        this.rental = rental;
         this.amount = amount;
-        this.paymentDate = paymentDate;
+        this.paymentDate = LocalDate.now();
         this.paymentMethod = paymentMethod;
-        this.status = status;
+        this.status = PaymentStatus.PAID;
     }
 
     public int getPaymentId() {
@@ -29,12 +30,12 @@ public class Payment {
         this.paymentId = paymentId;
     }
 
-    public int getRentalId() {
-        return rentalId;
+    public Rental getRental() {
+        return rental;
     }
 
-    public void setRentalId(int rentalId) {
-        this.rentalId = rentalId;
+    public void setRental(Rental rental) {
+        this.rental = rental;
     }
 
     public double getAmount() {
@@ -76,20 +77,20 @@ public class Payment {
         System.out.println("Payment Details ");
         System.out.println("----------------");
         System.out.println("PaymentId: " + getPaymentId() );
-        System.out.println("RentalId: " + getRentalId() );
+        System.out.println("RentalId: " + getRental());
         System.out.println("Amount: " + getAmount() );
         System.out.println("PaymentDate: " + getPaymentDate());
         System.out.println("Status: " + getStatus());
     
     }
     
-    public void markAsPaid(){ // we can replace these is.. functions with the getstatus and that's it 
-    this.status = PaymentStatus.PAID;
-    }
-    
-    public void markAsFailed(){
-    this.status = PaymentStatus.FAILED;
-    }
+//    public void markAsPaid(){ // we can replace these is.. functions with the getstatus and that's it 
+//    this.status = PaymentStatus.PAID;
+//    }
+//    
+//    public void markAsFailed(){
+//    this.status = PaymentStatus.FAILED;
+//    }  we comment this for now because our method is not wnated for marking the constructor is already making the PAID status 
     
     public boolean isPaid(){
     return this.status == PaymentStatus.PAID  ;
@@ -99,9 +100,6 @@ public class Payment {
     return this.status == PaymentStatus.FAILED;
     }
     
-    public boolean isPending(){
-    return this.status == PaymentStatus.PENDING;
-    }
     
     
     
