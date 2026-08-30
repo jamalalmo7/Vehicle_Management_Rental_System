@@ -8,12 +8,13 @@ public class RentalManager {
     private ArrayList<Rental> rentalList = new ArrayList<>();
 
     public boolean createRental(Customer customer, Vehicle vehicle, LocalDate startDate, LocalDate endDate) {
-         if (endDate.isBefore(startDate) || endDate.isEqual(startDate)) {
-            return false;
-        }
          if(customer == null || vehicle == null || startDate == null || endDate == null){
              return false;
          }
+        if (endDate.isBefore(startDate) || endDate.isEqual(startDate)) {
+            return false;
+        }
+         
         if (vehicle.isAvailable()) {
             int duration = Rental.calculateDuration(startDate, endDate);
 

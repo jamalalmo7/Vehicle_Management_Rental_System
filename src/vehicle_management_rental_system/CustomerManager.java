@@ -24,7 +24,8 @@ public class CustomerManager {
 //        System.out.println("Added customer successfully");
    }
     
-   public boolean deleteCustomer(String userName){
+   public boolean deleteCustomer(String userName){ // here if he has an active rental we need to remove it as well 
+       //but we cannot reach the rental by the customer we have to search for the rental that has this customer to delete it or if there is no one it's okay then
        Customer customerToDelete = null;
    for (Customer c : customerList){
     if(c.getUserName().equalsIgnoreCase(userName)){
@@ -33,8 +34,9 @@ public class CustomerManager {
         }
         
     }
-   if (customerToDelete != null){
+   if (customerToDelete != null ){
        customerList.remove(customerToDelete);
+       
        return true;
    }
    

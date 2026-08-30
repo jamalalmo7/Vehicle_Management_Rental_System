@@ -8,30 +8,31 @@ import java.util.ArrayList;
 public class PaymentManager {
     private ArrayList<Payment> paymentList = new ArrayList<>();
 
-public void createPayment(Rental rental, PaymentMethod paymentMethod){
-    if(rental == null){
-        System.out.println("Rental is not found!");
-        return;
+public boolean createPayment(Rental rental, PaymentMethod paymentMethod){
+    //to avoid paying twice we need to check if this rental has already had a payment 
+    for(Payment p : paymentList){
+        if(p.getRental() == rental){
+            return false;
+        }
     }
-    if(rental.getStatus()!= RentalStatus.ACTIVE){
-        System.out.println("Cannot pay, the rental is not active");
-        return;
+    if(rental == null || rental.getStatus()!= RentalStatus.ACTIVE){
+        return false;
     }
+   
     double amount = rental.getTotalPrice();
     
-    Payment payment;
-    payment = new Payment(rental,amount,paymentMethod);
+    Payment payment = new Payment(rental,amount,paymentMethod);
     paymentList.add(payment);
-    System.out.println("Payment created successfully.");
+return true;
 }
 
 public Payment getPaymentById(int paymentId){
+    if(paymentId <=0){return null;}
     for(Payment p : paymentList){
         if(p.getPaymentId() == paymentId){
             return p;
         }
     }
-    System.out.println("Payment ID is not found");
     return null;
 }
 public ArrayList<Payment> getRentalPayments(int rentalId){
