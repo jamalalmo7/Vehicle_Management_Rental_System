@@ -7,7 +7,7 @@ import java.time.temporal.ChronoUnit;
 
 public class Rental {
     private static int idCounter = 0;
-    private int rentalId; 
+    private final int rentalId; 
     private LocalDate startDate;
     private LocalDate endDate;
     private double totalPrice;
@@ -16,7 +16,7 @@ public class Rental {
     private Customer customer;// (has a ) relationship to reference the rental to the customer with set/get.customer
     private Vehicle vehicle;// for knowing which car reference 
     
-    public Rental(){}
+
     public Rental 
     (Customer customer, Vehicle vehicle, LocalDate startDate, LocalDate endDate , double totalPrice,RentalStatus status){
       this.rentalId = ++idCounter;
@@ -36,10 +36,6 @@ public class Rental {
 
     public int getRentalId() {
         return rentalId;
-    }
-
-    public void setRentalId(int rentalId) {
-        this.rentalId = rentalId;
     }
 
     public LocalDate getStartDate() {
@@ -118,17 +114,27 @@ public class Rental {
 //     this.status = RentalStatus.ACTIVE;
 //     }//no need cause there is no any status before active to change directly will take active if booked 
      
-     public void completeRental(){
+     public boolean completeRental(){
      if(this.status == RentalStatus.ACTIVE){
         this.status = RentalStatus.COMPLETED;
+        if(this.vehicle != null){
+            this.vehicle.setStatus(VehicleStatus.AVAILABLE);
+            
+        }
+        return true;
      }
+     return false;
      }
      
-     public void cancelRental(){
+     public boolean cancelRental(){
      if(this.status == RentalStatus.ACTIVE){
-     this.status = RentalStatus.COMPLETED;
+     this.status = RentalStatus.CANCELLED;
+     if(this.vehicle != null){
+         this.vehicle.setStatus(VehicleStatus.AVAILABLE);
      }
-         
+     return true;
+     }
+         return false;
      }
 
     @Override

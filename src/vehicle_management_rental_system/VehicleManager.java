@@ -6,56 +6,52 @@ import java.util.ArrayList;
 
 
 public class VehicleManager {
-    private ArrayList<Vehicle> vehicleList = new ArrayList<>(); 
+    private final ArrayList<Vehicle> vehicleList = new ArrayList<>(); 
      
      //================= ADD VEHICLE =====================
-    public void addVehicle(int id, VehicleType type,String brand, String model,int year , double pricePerDay,VehicleStatus status){
+    public boolean addVehicle(VehicleType type,String brand, String model,int year , double pricePerDay){
    
-        for (Vehicle v : vehicleList){
-            if(v.getId() == id){
-                System.out.println("Error.. Vehicle with ID " + id + " already exist!");
-                return;
-            }
-        }
+      if(type == null || brand == null || model == null || pricePerDay <= 0){
+          return false;
+      }
         
         Vehicle vehicle;
      
         
         if (type == VehicleType.CAR){
-            vehicle = new Car(id , type, brand , model, year, pricePerDay, status);
+            vehicle = new Car(type, brand , model, year, pricePerDay);
         }
         else if (type == VehicleType.MOTORCYCLE){
-            vehicle = new MotorCycle(id , type, brand , model, year, pricePerDay, status);
+            vehicle = new MotorCycle(type, brand , model, year, pricePerDay);
         }
         else {
-            vehicle = new Truck(id , type, brand , model, year, pricePerDay, status);
+            vehicle = new Truck(type, brand , model, year, pricePerDay);
         }
   
         vehicleList.add(vehicle);
-        System.out.println("Vehicle added successfully");
+      return true;
 //        System.out.println("vehicle is : " + vehicleList);  This is just to check if it's added 
     }
     
     
          //================= DELETE VEHICLE ====================
-  public void deleteVehicle(int vehicleId){
+  public boolean deleteVehicle(int vehicleId){
 
-        Vehicle vehicleToDelete = null;
-       for (Vehicle v : vehicleList){
-           if (v.getId() == vehicleId){
-                vehicleToDelete = v;// it not only copy the v to it ,,,it points to v as a reference so vehicletodelete now it pointing to v so when we delete it .. it delets v normally
-                break;
-           }
-         
-       }
-        if(vehicleToDelete != null){// not if vehicleToDelete.getId() == vehicleId  ** cause when you try to recall a getId fun to a null obj or variable the programm collaps (NullPointerException)
-        vehicleList.remove(vehicleToDelete);
-            System.out.println("Vehicle deleted successfully");
-        return;
+        Vehicle vehicleToDelete = getVehicleById(vehicleId);
+        if(vehicleToDelete == null){// not if vehicleToDelete.getId() == vehicleId  ** cause when you try to recall a getId fun to a null obj or variable the programm collaps (NullPointerException)
+
+            return false;
         }
-        System.out.println("The Id is not found , please ensure again");
+        
+        if(vehicleToDelete.isRented()){
+            return false;
+        }
+      
+        return vehicleList.remove(vehicleToDelete);
 
-    }
+        }
+
+    
   
        //================= GET VEHICLE BY ID =====================
   public Vehicle getVehicleById(int vehicleId){
@@ -65,22 +61,31 @@ public class VehicleManager {
               return v;
           }
       }
-      System.out.println("This Id Vehicle is not found");
       return null;
   }
   
        //================= UPDATE FULL VEHICLE =====================
-  public void updateVehicle(Vehicle vehicle, VehicleType newType,String newBrand , String newModel, int newYear , double newPricePerDay, VehicleStatus newStatus ){
+  public boolean updateVehicle(Vehicle vehicle, VehicleType newType,String newBrand , String newModel, int newYear , double newPricePerDay, VehicleStatus newStatus ){
+      int currentYear = java.time.Year.now().getValue();
+      if(vehicle == null || newPricePerDay <=0){
+      return false;
+      }
+      if(newYear < 1900 || newYear > currentYear){
+      return false;
+      }
+      if(newBrand == null || newBrand.trim().isEmpty() ||
+         newModel == null || newModel.trim().isEmpty()){
+      return false;
+      }
       vehicle.setType(newType);
       vehicle.setBrand(newBrand);
       vehicle.setModel(newModel);
       vehicle.setYear(newYear);
       vehicle.setPricePerDay(newPricePerDay);
-      vehicle.setStatus(newStatus);
-      
-      System.out.println("Update done successfully");
-      System.out.println("The Vehicle after update: ");
-      vehicle.getDetails();
+      if(newStatus != null){
+         vehicle.setStatus(newStatus);
+        }
+      return true;
   }
 // the specific update would be in main with cases and setter directly for each one  
   

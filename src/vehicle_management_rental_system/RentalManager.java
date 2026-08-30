@@ -7,11 +7,13 @@ public class RentalManager {
 
     private ArrayList<Rental> rentalList = new ArrayList<>();
 
-    public void createRental(Customer customer, Vehicle vehicle, LocalDate startDate, LocalDate endDate) {
-        if (endDate.isBefore(startDate) || endDate.isEqual(startDate)) {
-            System.out.println("Error..End date cannot be before start date.");
-            return;
+    public boolean createRental(Customer customer, Vehicle vehicle, LocalDate startDate, LocalDate endDate) {
+         if (endDate.isBefore(startDate) || endDate.isEqual(startDate)) {
+            return false;
         }
+         if(customer == null || vehicle == null || startDate == null || endDate == null){
+             return false;
+         }
         if (vehicle.isAvailable()) {
             int duration = Rental.calculateDuration(startDate, endDate);
 
@@ -20,48 +22,53 @@ public class RentalManager {
             Rental rental = new Rental(customer, vehicle, startDate, endDate, totalPrice,
                     RentalStatus.ACTIVE);
 
-            //rental.setPayment(payment);
             vehicle.setStatus(VehicleStatus.RENTED);
             rentalList.add(rental);
-            System.out.println("Rental created successfully. Rental ID: " + rental.getRentalId());
-            return;
+            return true;
         }
-
-        System.out.println("Sorry,this vehicle is unavailable for now.");
+            return false;
     }
 
-    public void cancelRental(int rentalId) {
+    public boolean cancelRental(int rentalId) {
         Rental r = getRentalById(rentalId);
         if (r != null) {
-            if (r.getStatus() == RentalStatus.ACTIVE) {
-                r.setStatus(RentalStatus.CANCELLED);
-                r.getVehicle().setStatus(VehicleStatus.AVAILABLE);
-                System.out.println("Cancelled rental successfully");
-                return;
-            }
-            System.out.println("This rental is inactive.");
-            return;
+            return r.cancelRental();
         }
-        System.out.println("This rental ID is not found");
+            // it was replaced all of this by the fun cancelRental in Rental class  to change the statuses 
+            
+//            if (r.getStatus() == RentalStatus.ACTIVE) {
+//                r.setStatus(RentalStatus.CANCELLED);
+//                r.getVehicle().setStatus(VehicleStatus.AVAILABLE);
+//                System.out.println("Cancelled rental successfully");
+//                return;
+//            }
+//            System.out.println("This rental is inactive.");
+//            return;
+        
+        return false;
     }
 
-    public void returnVehicle(int rentalId) {
+    public boolean returnVehicle(int rentalId) {
         Rental r = getRentalById(rentalId);
         if (r != null) {
-            if (r.getStatus() == RentalStatus.ACTIVE) {
-                r.setStatus(RentalStatus.COMPLETED);
-                r.getVehicle().setStatus(VehicleStatus.AVAILABLE);
-                System.out.println("Rental finished successfully");
-                return;
-            }
-            System.out.println("This rental is inactive.");
-            return;
+            return r.completeRental();
         }
-        System.out.println("This rental ID is not found");
-
+//            if (r.getStatus() == RentalStatus.ACTIVE) {
+//                r.setStatus(RentalStatus.COMPLETED);
+//                r.getVehicle().setStatus(VehicleStatus.AVAILABLE);
+//                System.out.println("Rental finished successfully");
+//                return;
+//            }
+//            System.out.println("This rental is inactive.");
+//            return;
+        
+            return false;
     }
 
     public Rental getRentalById(int rentalId) {
+        if(rentalId <=0){
+            return null;
+        }
         for (Rental r : rentalList) {
             if (r.getRentalId() == rentalId) {
                 return r;
@@ -128,12 +135,13 @@ public class RentalManager {
 
     public ArrayList<Rental> getCustomerRentals(String username) {
         ArrayList<Rental> results = new ArrayList<>();
-        if (username == null) {
+        if (username == null || username.trim().isEmpty()) {
             return results;
         }
+        String cleanUsername = username.trim();
         for (Rental r : rentalList) {
             if (r.getCustomer() != null && r.getCustomer().getUserName() != null) {
-                if (r.getCustomer().getUserName().equalsIgnoreCase(username)) {
+                if (r.getCustomer().getUserName().equalsIgnoreCase(cleanUsername)) {
                     results.add(r);
                 }
             }

@@ -10,7 +10,7 @@ like if the ahmed user needs to store lists cannot has it inside himself needs
 a place to store and manage there as well as deleting another user etc...
 
         */
-public class User {
+public abstract class User {
     private String userName;
     private String password;
     private Role role;// enum
@@ -21,7 +21,7 @@ public class User {
         this.userName = userName;
         this.password = password;
         this.role = role;
-       
+       this.loggedIn = false;
     
     
     }
@@ -56,22 +56,34 @@ public class User {
     */
     
     public boolean changePassword(String oldPassword, String newPassword){
-        if (this.password.equals(oldPassword)){
-        this.password = newPassword;
-        return true;
+        if (oldPassword == null || newPassword == null || newPassword.trim().isEmpty()){
+        return false;
+        }
+        if(this.password.equals(oldPassword)){
+            this.password = newPassword;
+            return true;
         }
         return false;
         
     }
     
-    public void changeUserName(String username){
-    this.userName = username;
-    // can be enhanced ********
-    
-    }
+//    public void changeUserName(String username){
+//    this.userName = username;
+//    // can be enhanced ********
+//    
+//    }  comment it as there is setter of the username can be used instead
+//      and for safety we've added a method in CustomerManager to check about Usernames to set the newUsername safely
     
      public boolean login(String username , String password){
-     return this.userName.equals(username) && this.password.equals(password);
+         if(username == null || password == null){
+             return false;
+         }
+         if(this.userName.equals(username) && this.password.equals(password)){
+             this.loggedIn = true;
+             return true;
+             
+         }
+     return false;
      // after DBS it will be searched in UserManager to find the user then here to check 
      
      }
@@ -81,7 +93,9 @@ public class User {
     
     }
     
-    
+    public boolean isLoggedIn(){
+        return loggedIn;
+    }
     
     
     

@@ -5,24 +5,26 @@ import java.util.ArrayList;
 
 
 public class CustomerManager {
-   private ArrayList<Customer> customerList = new ArrayList<>();
+   private final ArrayList<Customer> customerList = new ArrayList<>();
    
-   public void addCustomer(String userName, String password, String name,String phone ,String email ,String address ,String licenseNumber){
+   public boolean addCustomer(String userName, String password, String name,String phone ,String email ,String address ,String licenseNumber){
         for(Customer c : customerList){
         if (c.getUserName().equalsIgnoreCase(userName)){
-            System.out.println("Error.. Customer with username : " + userName + " already exists.");
-            return;
+         //leave printing to main // System.out.println("Error.. Customer with username : " + userName + " already exists.");
+            return false;
             }
+        if(c.getPhone().equals(phone) || c.getLicenseNumber().equals(licenseNumber)){return false;}
         }
-       
+      
        
        Customer customer;
         customer = new Customer(userName, password, Role.CUSTOMER,name, phone, email, address, licenseNumber);
         customerList.add(customer);
-        System.out.println("Added customer successfully");
+        return true;
+//        System.out.println("Added customer successfully");
    }
     
-   public void deleteCustomer(String userName){
+   public boolean deleteCustomer(String userName){
        Customer customerToDelete = null;
    for (Customer c : customerList){
     if(c.getUserName().equalsIgnoreCase(userName)){
@@ -33,12 +35,10 @@ public class CustomerManager {
     }
    if (customerToDelete != null){
        customerList.remove(customerToDelete);
-       System.out.println("Delete customer successfully");
-       return;
+       return true;
    }
    
-       System.out.println("This user is not found");
-   
+        return false;
    }
    
    
@@ -48,29 +48,33 @@ public class CustomerManager {
              return c;
           }
       }
-      System.out.println("This customer user is not found");
+//      System.out.println("This customer user is not found");
       return null;
   }
     
-    
-    public void updateCustomer(Customer customer, String name, String phone, String email, String address, String licenseNumber){
-        if (customer == null){
-            System.out.println("Error.. Provided customer object is null");
-        return;
+    public boolean updateCustomer(Customer customer, String newName, String newPhone, String newEmail, String newAddress, String newLicenseNumber) {
+        if (customer == null) {
+        return false;
         }
+        for (Customer c : customerList) {
         
-        customer.setName(name);
-        customer.setPhone(phone);
-        customer.setEmail(email);
-        customer.setAddress(address);
-        customer.setLicenseNumber(licenseNumber);
-        
-        System.out.println("Update done successfully");
-        System.out.println("Customer after update: ");
-        customer.getDetails();
-    
-    
+        if (c.getCustomerId() != customer.getCustomerId()) {
+            if (c.getPhone().equals(newPhone) || c.getLicenseNumber().equalsIgnoreCase(newLicenseNumber)) {
+                return false; 
+            }
+        }
     }
+
+    
+        customer.setName(newName);
+        customer.setPhone(newPhone);
+        customer.setEmail(newEmail);
+        customer.setAddress(newAddress);
+        customer.setLicenseNumber(newLicenseNumber);
+
+        return true; 
+}
+
     
     public ArrayList<Customer> searchCustomer(String keyword){
         ArrayList<Customer> results = new ArrayList<>();
@@ -104,5 +108,21 @@ public class CustomerManager {
         return c;
         }
         return null;
+    }
+    
+    public boolean updateUsername(Customer customer, String newUsername){
+        if(customer == null || newUsername == null || newUsername.trim().isEmpty()){
+            return false;
+        }
+        String trimmedUsername = newUsername.trim();
+        
+        for(Customer c : customerList){
+            if(c.getCustomerId() != customer.getCustomerId()){
+                if((c.getUserName().equalsIgnoreCase(trimmedUsername))){
+                return false;}
+            }
+        }
+       customer.setUserName(trimmedUsername);
+       return true;
     }
 }

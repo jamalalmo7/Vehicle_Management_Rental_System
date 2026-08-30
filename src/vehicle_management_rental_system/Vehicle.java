@@ -3,7 +3,8 @@ package vehicle_management_rental_system;
 
 
 public class Vehicle {
-    private int id;
+    public static int countId = 0;
+    private final int id;
     private VehicleType type;// enum 
     private String brand;
     private String model;
@@ -11,26 +12,21 @@ public class Vehicle {
     private double pricePerDay;
     private VehicleStatus status; // enum
     
-    public Vehicle(){}
     
     public Vehicle
-    (int id,VehicleType type, String brand,String model,int year,
-            double pricePerDay, VehicleStatus status){
-        this.id = id ;
+    (VehicleType type, String brand,String model,int year,
+            double pricePerDay){
+        this.id = ++countId ;
         this.type = type ;
         this.brand = brand ;
         this.model = model ;
         this.year = year ;
         this.pricePerDay = pricePerDay ;
-        this.status = status ;
+        this.status = VehicleStatus.AVAILABLE;
     }
 
     public int getId() {
         return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public VehicleType getType() {
@@ -113,6 +109,8 @@ public class Vehicle {
    }
     
     public double calculateCost(int numberOfDays){
+        if(numberOfDays <= 0){
+        return 0.0;}
     return pricePerDay * numberOfDays;
     }
     
