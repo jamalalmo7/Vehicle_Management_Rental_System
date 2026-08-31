@@ -7,6 +7,12 @@ import java.util.ArrayList;
 public class CustomerManager {
    private final ArrayList<Customer> customerList = new ArrayList<>();
    
+   public CustomerManager(){
+    Customer admin = new Customer("admin" , "jamal000",Role.ADMIN, "System Admin", "77044825500","admin@gmail.com", "address","111");
+   customerList.add(admin);
+   }
+  
+   
    public boolean addCustomer(String userName, String password, String name,String phone ,String email ,String address ,String licenseNumber){
         for(Customer c : customerList){
         if (c.getUserName().equalsIgnoreCase(userName)){
