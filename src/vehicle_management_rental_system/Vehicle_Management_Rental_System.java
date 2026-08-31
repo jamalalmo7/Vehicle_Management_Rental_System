@@ -76,39 +76,43 @@ public class Vehicle_Management_Rental_System {
     }
 }
 
-    
-    public static void registerCustomer(){
-        System.out.println("\n======= REGISTER NEW CUSTOMER ========");
-        System.out.println("Enter Username: ");
-        String username = scanner.nextLine();
-        
-        System.out.println("Enter Password: ");
-        String password = scanner.nextLine();
-        
-        System.out.println("Enter Fullname: ");
-        String name = scanner.nextLine();
-        
-        System.out.println("Enter Phone: ");
-        String phone = scanner.nextLine();
-        
-        System.out.println("Enter Email: ");
-        String email = scanner.nextLine();
-        
-        System.out.println("Enter Address: ");
-        String address = scanner.nextLine();
-        
-        System.out.println("Enter LicenseNumber: ");
-        String licensNumber = scanner.nextLine();
-        
-        boolean isSuccess = customerManager.addCustomer(username, password, name, phone, email, address, licensNumber);
-        if(isSuccess){
-            System.out.println("\n*Success* Account created successfully! you can no login.");
-        }else{
-            System.out.println("\nError* Registration failed! Username,Phone,or License Number already exists.");
-        }
-    
+  private static String readInput(String prompt) {
+    System.out.print(prompt);
+    String input = scanner.nextLine().trim();
+    if (input.equals("0")) {
+        throw new IllegalStateException("CANCEL");
     }
-    public static void AdminMenu(){}
-    public static void CustomerMenu(){}
+    return input;
+}
+
+public static void registerCustomer() {
+    System.out.println("\n========== REGISTER NEW CUSTOMER ==========");
+    System.out.println("(Enter '0' at any prompt to cancel and go back)\n");
+
+    try {
+       
+        String username = readInput("Enter Username: ");
+        String password = readInput("Enter Password: ");
+        String name = readInput("Enter Full Name: ");
+        String phone = readInput("Enter Phone Number: ");
+        String email = readInput("Enter Email: ");
+        String address = readInput("Enter Address: ");
+        String license = readInput("Enter Driver License Number: ");
+
+        boolean isSuccess = customerManager.addCustomer(username, password, name, phone,email,address, license);
+        if (isSuccess) {
+            System.out.println("\n[Success] Account created successfully!");
+        } else {
+            System.out.println("\n[Error] Username, Phone, or License already exists!");
+        }
+
+    } catch (IllegalStateException e) {
+        System.out.println("\n[Cancelled] Registration cancelled by user.");
+    }
+}
+
+    public static void AdminMenu(){
+        System.out.println("hello i am adminmenue");}
+    public static void CustomerMenu(){System.out.println("hello i am customermenu");}
     
 }
