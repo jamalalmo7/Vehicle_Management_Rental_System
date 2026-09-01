@@ -1,6 +1,8 @@
 
 package vehicle_management_rental_system;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 
@@ -8,6 +10,8 @@ public class Vehicle_Management_Rental_System {
     private static Scanner scanner = new Scanner(System.in);
     private static CustomerManager customerManager = new CustomerManager();
     private static Customer currentUser = null;
+    private static VehicleManager vehicleManager = new VehicleManager();
+    private static RentalManager rentalManager = new RentalManager();
    //=========================================================================
     public static void main(String[] args) {
         mainMenu();
@@ -66,10 +70,10 @@ public class Vehicle_Management_Rental_System {
         System.out.println("\nLogin successful! Welcome " + user.getName());
 
         if (user.getRole() == Role.ADMIN) {
-            AdminMenu();
+            adminMenu();
         } 
         else {
-            CustomerMenu();
+            customerMenu();
         }
 
         currentUser = null; 
@@ -111,8 +115,976 @@ public static void registerCustomer() {
     }
 }
 
-    public static void AdminMenu(){
-        System.out.println("hello i am adminmenue");}
-    public static void CustomerMenu(){System.out.println("hello i am customermenu");}
+    public static void adminMenu() {
+    int choice;
+
+    do {
+        System.out.println("\n========== ADMIN MENU ==========");
+        System.out.println("1. Vehicle Management");
+        System.out.println("2. Customer Management");
+        System.out.println("3. Rental Management");
+        System.out.println("4. Payment Management");
+        System.out.println("5. Reports");
+        System.out.println("6. Logout");
+        System.out.print("Choose: ");
+
+        choice = Integer.parseInt(scanner.nextLine());
+
+        switch (choice) {
+            case 1:
+                vehicleManagement();
+                break;
+
+            case 2:
+                customerManagement();
+                break;
+
+            case 3:
+                rentalManagement();
+                break;
+
+            case 4:
+                paymentManagement();
+                break;
+
+            case 5:
+                reports();
+                break;
+
+            case 6:
+                System.out.println("Logging out...");
+                break;
+
+            default:
+                System.out.println("Invalid choice.");
+        }
+
+    } while (choice != 6);
+}
+   
+   public static void customerMenu() {
+    int choice;
+
+    do {
+        System.out.println("\n========== CUSTOMER MENU ==========");
+        System.out.println("1. Browse Vehicles");
+        System.out.println("2. Search Vehicles");
+        System.out.println("3. My Rentals");
+        System.out.println("4. My Payments");
+        System.out.println("5. My Profile");
+        System.out.println("6. Logout");
+        System.out.print("Choose: ");
+
+        choice = Integer.parseInt(scanner.nextLine());
+
+        switch (choice) {
+            case 1:
+                browseVehicles();
+                break;
+
+            case 2:
+                searchVehicles();
+                break;
+
+            case 3:
+                myRentals();
+                break;
+
+            case 4:
+                myPayments();
+                break;
+
+            case 5:
+                myProfile();
+                break;
+
+            case 6:
+                System.out.println("Logging out...");
+                break;
+
+            default:
+                System.out.println("Invalid choice.");
+        }
+
+    } while (choice != 6);
+}
+   //====================== ADMIN MENU ==================
+    public static void vehicleManagement() {
+    int choice;
+
+    do {
+        System.out.println("\n========== VEHICLE MANAGEMENT ==========");
+        System.out.println("1. Add Vehicle");
+        System.out.println("2. Update Vehicle");
+        System.out.println("3. Delete Vehicle");
+        System.out.println("4. Search Vehicle");
+        System.out.println("5. View All Vehicles");
+        System.out.println("6. Back");
+        System.out.print("Choose: ");
+
+        choice = Integer.parseInt(scanner.nextLine());
+
+        switch (choice) {
+            case 1:
+                addVehicle();
+                break;
+
+            case 2:
+                updateVehicle();
+                break;
+
+            case 3:
+                deleteVehicle();
+                break;
+
+            case 4:
+                searchVehicle();
+                break;
+
+            case 5:
+                viewAllVehicles();
+                break;
+
+            case 6:
+                break;
+
+            default:
+                System.out.println("Invalid choice.");
+        }
+
+    } while (choice != 6);
+}
+public static void customerManagement() {
+    int choice;
+
+    do {
+        System.out.println("\n========== CUSTOMER MANAGEMENT ==========");
+        System.out.println("1. Add Customer");
+        System.out.println("2. Update Customer");
+        System.out.println("3. Delete Customer");
+        System.out.println("4. Search Customer");
+        System.out.println("5. View All Customers");
+        System.out.println("6. Back");
+        System.out.print("Choose: ");
+
+        choice = Integer.parseInt(scanner.nextLine());
+
+        switch (choice) {
+            case 1:
+                addCustomer();
+                break;
+
+            case 2:
+                updateCustomer();
+                break;
+
+            case 3:
+                deleteCustomer();
+                break;
+
+            case 4:
+                searchCustomer();
+                break;
+
+            case 5:
+                viewAllCustomers();
+                break;
+
+            case 6:
+                break;
+
+            default:
+                System.out.println("Invalid choice.");
+        }
+
+    } while (choice != 6);
+}
+
+public static void rentalManagement() {
+    int choice;
+
+    do {
+        System.out.println("\n========== RENTAL MANAGEMENT ==========");
+        System.out.println("1. Create Rental");
+        System.out.println("2. Cancel Rental");
+        System.out.println("3. Return Vehicle");
+        System.out.println("4. Search Rentals");
+        System.out.println("5. View Rental By ID");
+        System.out.println("6. View All Rentals");
+        System.out.println("7. View Active Rentals");
+        System.out.println("8. View Completed Rentals");
+        System.out.println("9. View Customer Rentals");
+        System.out.println("10. View Vehicle Rentals");
+        System.out.println("11. Back");
+        System.out.print("Choose: ");
+
+        choice = Integer.parseInt(scanner.nextLine());
+
+        switch (choice) {
+            case 1:
+                createRental();
+                break;
+
+            case 2:
+                cancelRental();
+                break;
+
+            case 3:
+                returnVehicle();
+                break;
+
+            case 4:
+                searchRentals();
+                break;
+
+            case 5:
+                viewRentalById();
+                break;
+
+            case 6:
+                viewAllRentals();
+                break;
+
+            case 7:
+                viewActiveRentals();
+                break;
+
+            case 8:
+                viewCompletedRentals();
+                break;
+
+            case 9:
+                viewCustomerRentals();
+                break;
+
+            case 10:
+                viewVehicleRentals();
+                break;
+
+            case 11:
+                break;
+
+            default:
+                System.out.println("Invalid choice.");
+        }
+
+    } while (choice != 11);
+}
+
+public static void paymentManagement() {
+    int choice;
+
+    do {
+        System.out.println("\n========== PAYMENT MANAGEMENT ==========");
+        System.out.println("1. Create Payment");
+        System.out.println("2. View Payment By ID");
+        System.out.println("3. View Customer Payments");
+        System.out.println("4. View Rental Payments");
+        System.out.println("5. View All Payments");
+        System.out.println("6. Back");
+        System.out.print("Choose: ");
+
+        choice = Integer.parseInt(scanner.nextLine());
+
+        switch (choice) {
+            case 1:
+                createPayment();
+                break;
+
+            case 2:
+                viewPaymentById();
+                break;
+
+            case 3:
+                viewCustomerPayments();
+                break;
+
+            case 4:
+                viewRentalPayments();
+                break;
+
+            case 5:
+                viewAllPayments();
+                break;
+
+            case 6:
+                break;
+
+            default:
+                System.out.println("Invalid choice.");
+        }
+
+    } while (choice != 6);
+}
+
+public static void reports() {
+    int choice;
+
+    do {
+        System.out.println("\n========== REPORTS ==========");
+        System.out.println("1. Vehicle Report");
+        System.out.println("2. Customer Report");
+        System.out.println("3. Rental Report");
+        System.out.println("4. Payment Report");
+        System.out.println("5. Back");
+        System.out.print("Choose: ");
+
+        choice = Integer.parseInt(scanner.nextLine());
+
+        switch (choice) {
+            case 1:
+                vehicleReport();
+                break;
+
+            case 2:
+                customerReport();
+                break;
+
+            case 3:
+                rentalReport();
+                break;
+
+            case 4:
+                paymentReport();
+                break;
+
+            case 5:
+                break;
+
+            default:
+                System.out.println("Invalid choice.");
+        }
+
+    } while (choice != 5);
+}    //===================== CUSTOMER MENU ================
+    public static void browseVehicles(){}
+    public static void searchVehicles(){}
+    public static void myRentals(){}
+    public static void myPayments(){}
+    public static void myProfile(){}
+    
+    //====================== VEHICLE MANAGEMENT ===========
+   public static void addVehicle() {
+    System.out.println("\n========== ADD VEHICLE ==========");
+    System.out.println("Enter Vehicle type (Car, Motorcycle, Truck): ");
+
+    String type = scanner.nextLine();
+
+    System.out.print("Enter Brand: ");
+    String brand = scanner.nextLine();
+
+    System.out.print("Enter Model: ");
+    String model = scanner.nextLine();
+
+    System.out.print("Enter Year: ");
+    int year = Integer.parseInt(scanner.nextLine());
+
+    System.out.print("Enter Price Per Day: ");
+    double pricePerDay = Double.parseDouble(scanner.nextLine());
+
+    if (type.equalsIgnoreCase("car")) {
+
+        boolean success = vehicleManager.addVehicle(
+                VehicleType.CAR, brand, model, year, pricePerDay);
+
+        if (success) {
+            System.out.println("Vehicle added successfully.");
+        } else {
+            System.out.println("Vehicle couldn't be added!");
+        }
+
+        return;
+    }
+
+    if (type.equalsIgnoreCase("motorcycle")) {
+
+        boolean success = vehicleManager.addVehicle(
+                VehicleType.MOTORCYCLE, brand, model, year, pricePerDay);
+
+        if (success) {
+            System.out.println("Vehicle added successfully.");
+        } else {
+            System.out.println("Vehicle couldn't be added!");
+        }
+
+        return;
+    }
+
+    if (type.equalsIgnoreCase("truck")) {
+
+        boolean success = vehicleManager.addVehicle(
+                VehicleType.TRUCK, brand, model, year, pricePerDay);
+
+        if (success) {
+            System.out.println("Vehicle added successfully.");
+        } else {
+            System.out.println("Vehicle couldn't be added!");
+        }
+
+        return;
+    }
+
+    System.out.println("Invalid Vehicle type!");
+}
+ public static void updateVehicle() {
+    System.out.println("\n========== UPDATE VEHICLE ==========");
+
+    System.out.print("Enter Vehicle ID: ");
+    int vehicleId = Integer.parseInt(scanner.nextLine());
+
+    Vehicle vehicle = vehicleManager.getVehicleById(vehicleId);
+
+    if (vehicle == null) {
+        System.out.println("Vehicle not found!");
+        return;
+    }
+
+    System.out.print("Enter new Vehicle type (Car, Motorcycle, Truck): ");
+    String type = scanner.nextLine();
+
+    System.out.print("Enter new Brand: ");
+    String brand = scanner.nextLine();
+
+    System.out.print("Enter new Model: ");
+    String model = scanner.nextLine();
+
+    System.out.print("Enter new Year: ");
+    int year = Integer.parseInt(scanner.nextLine());
+
+    System.out.print("Enter new Price Per Day: ");
+    double pricePerDay = Double.parseDouble(scanner.nextLine());
+
+    VehicleType vehicleType;
+
+    if (type.equalsIgnoreCase("car")) {
+        vehicleType = VehicleType.CAR;
+    } else if (type.equalsIgnoreCase("motorcycle")) {
+        vehicleType = VehicleType.MOTORCYCLE;
+    } else if (type.equalsIgnoreCase("truck")) {
+        vehicleType = VehicleType.TRUCK;
+    } else {
+        System.out.println("Invalid Vehicle type!");
+        return;
+    }
+
+    boolean success = vehicleManager.updateVehicle(vehicle, vehicleType,brand, model,year,pricePerDay);
+
+    if (success) {
+        System.out.println("Vehicle updated successfully.");
+    } else {
+        System.out.println("Vehicle couldn't be updated!");
+    }
+}
+  public static void deleteVehicle() {
+    System.out.println("\n========== DELETE VEHICLE ==========");
+
+    System.out.print("Enter Vehicle ID: ");
+    int vehicleId = Integer.parseInt(scanner.nextLine());
+
+    boolean success = vehicleManager.deleteVehicle(vehicleId);
+
+    if (success) {
+        System.out.println("Vehicle deleted successfully.");
+    } else {
+        System.out.println("Vehicle couldn't be deleted!");
+    }
+}
+public static void searchVehicle() {
+    int choice;
+
+    do {
+        System.out.println("\n========== SEARCH VEHICLE ==========");
+        System.out.println("1. Search by ID");
+        System.out.println("2. Search by Keyword");
+        System.out.println("3. Back");
+        System.out.print("Choose: ");
+
+        choice = Integer.parseInt(scanner.nextLine());
+
+        switch (choice) {
+
+            case 1:
+                System.out.print("Enter Vehicle ID: ");
+                int vehicleId = Integer.parseInt(scanner.nextLine());
+
+                Vehicle vehicle = vehicleManager.getVehicleById(vehicleId);
+
+                if (vehicle != null) {
+                    vehicle.getDetails();
+                } else {
+                    System.out.println("Vehicle not found!");
+                }
+                break;
+
+            case 2:
+                System.out.print("Enter keyword: ");
+                String keyword = scanner.nextLine();
+
+                ArrayList<Vehicle> results =
+                        vehicleManager.searchVehicle(keyword);
+
+                if (results.isEmpty()) {
+                    System.out.println("No vehicles found!");
+                } else {
+                    for (Vehicle v : results) {
+                        System.out.println("--------------------");
+                        v.getDetails();
+                    }
+                }
+                break;
+
+            case 3:
+                break;
+
+            default:
+                System.out.println("Invalid choice.");
+        }
+
+    } while (choice != 3);
+}
+
+public static void viewAllVehicles() {
+    int choice;
+
+    do {
+        System.out.println("\n========== VIEW VEHICLES ==========");
+        System.out.println("1. View All Vehicles");
+        System.out.println("2. View Available Vehicles");
+        System.out.println("3. Back");
+        System.out.print("Choose: ");
+
+        choice = Integer.parseInt(scanner.nextLine());
+
+        switch (choice) {
+
+            case 1:
+                ArrayList<Vehicle> allVehicles =
+                        vehicleManager.getAllVehicles();
+
+                if (allVehicles.isEmpty()) {
+                    System.out.println("No vehicles found.");
+                } else {
+                    for (Vehicle v : allVehicles) {
+                        System.out.println("--------------------");
+                        v.getDetails();
+                    }
+                }
+                break;
+
+            case 2:
+                ArrayList<Vehicle> availableVehicles =
+                        vehicleManager.getAvailableVehicles();
+
+                if (availableVehicles.isEmpty()) {
+                    System.out.println("No available vehicles.");
+                } else {
+                    for (Vehicle v : availableVehicles) {
+                        System.out.println("--------------------");
+                        v.getDetails();
+                    }
+                }
+                break;
+
+            case 3:
+                break;
+
+            default:
+                System.out.println("Invalid choice.");
+        }
+
+    } while (choice != 3);
+}
+
+
+    //======================= customer management ==============
+public static void addCustomer() {
+    System.out.println("\n========== ADD CUSTOMER ==========");
+
+    System.out.print("Enter Username: ");
+    String username = scanner.nextLine();
+
+    System.out.print("Enter Password: ");
+    String password = scanner.nextLine();
+
+    System.out.print("Enter Full Name: ");
+    String name = scanner.nextLine();
+
+    System.out.print("Enter Phone Number: ");
+    String phone = scanner.nextLine();
+
+    System.out.print("Enter Email: ");
+    String email = scanner.nextLine();
+
+    System.out.print("Enter Address: ");
+    String address = scanner.nextLine();
+
+    System.out.print("Enter Driver License Number: ");
+    String license = scanner.nextLine();
+
+    boolean success = customerManager.addCustomer(
+            username,
+            password,
+            name,
+            phone,
+            email,
+            address,
+            license
+    );
+
+    if (success) {
+        System.out.println("Customer added successfully.");
+    } else {
+        System.out.println("Customer couldn't be added!");
+    }
+}
+
+public static void updateCustomer() {
+    System.out.println("\n========== UPDATE CUSTOMER ==========");
+
+    System.out.print("Enter Customer Username: ");
+    String username = scanner.nextLine();
+
+    Customer customer = customerManager.getCustomerByUsername(username);
+
+    if (customer == null) {
+        System.out.println("Customer not found!");
+        return;
+    }
+
+    System.out.print("Enter New Name: ");
+    String name = scanner.nextLine();
+
+    System.out.print("Enter New Phone: ");
+    String phone = scanner.nextLine();
+
+    System.out.print("Enter New Email: ");
+    String email = scanner.nextLine();
+
+    System.out.print("Enter New Address: ");
+    String address = scanner.nextLine();
+
+    System.out.print("Enter New License Number: ");
+    String license = scanner.nextLine();
+
+    boolean success = customerManager.updateCustomer(
+            customer,
+            name,
+            phone,
+            email,
+            address,
+            license
+    );
+
+    if (success) {
+        System.out.println("Customer updated successfully.");
+    } else {
+        System.out.println("Customer couldn't be updated!");
+    }
+}
+
+public static void deleteCustomer() {
+    System.out.println("\n========== DELETE CUSTOMER ==========");
+
+    System.out.print("Enter Customer Username: ");
+    String username = scanner.nextLine();
+
+    System.out.print("Are you sure you want to delete this customer? (y/n): ");
+    String confirm = scanner.nextLine();
+
+    if (confirm.equalsIgnoreCase("y")) {
+
+        boolean success = customerManager.deleteCustomer(username);
+
+        if (success) {
+            System.out.println("Customer deleted successfully.");
+        } else {
+            System.out.println("Customer not found or couldn't be deleted!");
+        }
+
+    } else {
+        System.out.println("Delete cancelled.");
+    }
+}
+public static void searchCustomer() {
+    int choice;
+
+    do {
+        System.out.println("\n========== SEARCH CUSTOMER ==========");
+        System.out.println("1. Search by Username");
+        System.out.println("2. Search by Keyword");
+        System.out.println("3. Back");
+        System.out.print("Choose: ");
+
+        choice = Integer.parseInt(scanner.nextLine());
+
+        switch (choice) {
+
+            case 1:
+                System.out.print("Enter Username: ");
+                String username = scanner.nextLine();
+
+                Customer customer =
+                        customerManager.getCustomerByUsername(username);
+
+                if (customer != null) {
+                    customer.getDetails();
+                } else {
+                    System.out.println("Customer not found!");
+                }
+                break;
+
+            case 2:
+                System.out.print("Enter Keyword: ");
+                String keyword = scanner.nextLine();
+
+                ArrayList<Customer> results =
+                        customerManager.searchCustomer(keyword);
+
+                if (results.isEmpty()) {
+                    System.out.println("No customers found.");
+                } else {
+                    for (Customer c : results) {
+                        System.out.println("----------------------------");
+                        c.getDetails();
+                    }
+                }
+                break;
+
+            case 3:
+                break;
+
+            default:
+                System.out.println("Invalid choice.");
+        }
+
+    } while (choice != 3);
+}
+
+public static void viewAllCustomers() {
+    System.out.println("\n========== ALL CUSTOMERS ==========");
+
+    ArrayList<Customer> customers =
+            customerManager.getAllCustomers();
+
+    if (customers.isEmpty()) {
+        System.out.println("No customers found.");
+        return;
+    }
+
+    for (Customer customer : customers) {
+        System.out.println("----------------------------");
+        customer.getDetails();
+    }
+}
+
+    //======================= rental management ==============
+public static void createRental() {
+    System.out.println("\n========== CREATE RENTAL ==========");
+
+    System.out.print("Enter Customer Username: ");
+    String username = scanner.nextLine();
+
+    Customer customer = customerManager.getCustomerByUsername(username);
+
+    if (customer == null) {
+        System.out.println("Customer not found!");
+        return;
+    }
+
+    System.out.print("Enter Vehicle ID: ");
+    int vehicleId = Integer.parseInt(scanner.nextLine());
+
+    Vehicle vehicle = vehicleManager.getVehicleById(vehicleId);
+
+    if (vehicle == null) {
+        System.out.println("Vehicle not found!");
+        return;
+    }
+
+    System.out.print("Enter Start Date (YYYY-MM-DD): ");
+    LocalDate startDate = LocalDate.parse(scanner.nextLine());
+
+    System.out.print("Enter End Date (YYYY-MM-DD): ");
+    LocalDate endDate = LocalDate.parse(scanner.nextLine());
+
+    boolean success = rentalManager.createRental(customer, vehicle, startDate, endDate);
+
+    if (success) {
+        System.out.println("Rental created successfully.");
+    } else {
+        System.out.println("Rental couldn't be created!");
+    }
+}
+
+public static void cancelRental() {
+    System.out.println("\n========== CANCEL RENTAL ==========");
+
+    System.out.print("Enter Rental ID: ");
+    int rentalId = Integer.parseInt(scanner.nextLine());
+
+    boolean success = rentalManager.cancelRental(rentalId);
+
+    if (success) {
+        System.out.println("Rental cancelled successfully.");
+    } else {
+        System.out.println("Rental couldn't be cancelled!");
+    }
+}
+
+public static void returnVehicle() {
+    System.out.println("\n========== RETURN VEHICLE ==========");
+
+    System.out.print("Enter Rental ID: ");
+    int rentalId = Integer.parseInt(scanner.nextLine());
+
+    boolean success = rentalManager.returnVehicle(rentalId);
+
+    if (success) {
+        System.out.println("Vehicle returned successfully.");
+    } else {
+        System.out.println("Vehicle couldn't be returned!");
+    }
+}
+
+public static void searchRentals() {
+    System.out.println("\n========== SEARCH RENTALS ==========");
+
+    System.out.print("Enter keyword: ");
+    String keyword = scanner.nextLine();
+
+    ArrayList<Rental> results =
+            rentalManager.searchRental(keyword);
+
+    if (results.isEmpty()) {
+        System.out.println("No rentals found.");
+        return;
+    }
+
+    for (Rental rental : results) {
+        System.out.println("----------------------------");
+        rental.getDetails();
+    }
+}   
+
+public static void viewRentalById() {
+    System.out.println("\n========== RENTAL BY ID ==========");
+
+    System.out.print("Enter Rental ID: ");
+    int rentalId = Integer.parseInt(scanner.nextLine());
+
+    Rental rental = rentalManager.getRentalById(rentalId);
+
+    if (rental != null) {
+        rental.getDetails();
+    } else {
+        System.out.println("Rental not found!");
+    }
+} 
+
+public static void viewAllRentals() {
+    System.out.println("\n========== ALL RENTALS ==========");
+
+    ArrayList<Rental> rentals =
+            rentalManager.getAllRentals();
+
+    if (rentals.isEmpty()) {
+        System.out.println("No rentals found.");
+        return;
+    }
+
+    for (Rental rental : rentals) {
+        System.out.println("----------------------------");
+        rental.getDetails();
+    }
+}
+public static void viewActiveRentals() {
+    System.out.println("\n========== ACTIVE RENTALS ==========");
+
+    ArrayList<Rental> rentals =
+            rentalManager.getActiveRentals();
+
+    if (rentals.isEmpty()) {
+        System.out.println("No active rentals found.");
+        return;
+    }
+
+    for (Rental rental : rentals) {
+        System.out.println("----------------------------");
+        rental.getDetails();
+    }
+}
+
+public static void viewCompletedRentals() {
+    System.out.println("\n========== COMPLETED RENTALS ==========");
+
+    ArrayList<Rental> rentals =
+            rentalManager.getCompletedRentals();
+
+    if (rentals.isEmpty()) {
+        System.out.println("No completed rentals found.");
+        return;
+    }
+
+    for (Rental rental : rentals) {
+        System.out.println("----------------------------");
+        rental.getDetails();
+    }
+}
+
+public static void viewCustomerRentals() {
+    System.out.println("\n========== CUSTOMER RENTALS ==========");
+
+    System.out.print("Enter Customer Username: ");
+    String username = scanner.nextLine();
+
+    ArrayList<Rental> rentals =
+            rentalManager.getCustomerRentals(username);
+
+    if (rentals.isEmpty()) {
+        System.out.println("No rentals found for this customer.");
+        return;
+    }
+
+    for (Rental rental : rentals) {
+        System.out.println("----------------------------");
+        rental.getDetails();
+    }
+}
+
+public static void viewVehicleRentals() {
+    System.out.println("\n========== VEHICLE RENTALS ==========");
+
+    System.out.print("Enter Vehicle ID: ");
+    int vehicleId = Integer.parseInt(scanner.nextLine());
+
+    ArrayList<Rental> rentals =
+            rentalManager.getVehicleRentals(vehicleId);
+
+    if (rentals.isEmpty()) {
+        System.out.println("No rentals found for this vehicle.");
+        return;
+    }
+
+    for (Rental rental : rentals) {
+        System.out.println("----------------------------");
+        rental.getDetails();
+    }
+}
+
+    //======================= payment management ==============
+    public static void createPayment(){}
+    public static void viewPaymentById(){}
+    public static void viewCustomerPayments(){}
+    public static void viewRentalPayments(){}
+    public static void viewAllPayments(){}
+    
+    //======================= reports management ==============
+    public static void vehicleReport(){}
+    public static void customerReport(){}
+    public static void rentalReport(){}
+    public static void paymentReport(){}
+   
+    
+    
     
 }

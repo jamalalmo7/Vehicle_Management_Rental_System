@@ -65,7 +65,7 @@ public class VehicleManager {
   }
   
        //================= UPDATE FULL VEHICLE =====================
-  public boolean updateVehicle(Vehicle vehicle, VehicleType newType,String newBrand , String newModel, int newYear , double newPricePerDay, VehicleStatus newStatus ){
+  public boolean updateVehicle(Vehicle vehicle, VehicleType newType,String newBrand , String newModel, int newYear , double newPricePerDay){
       int currentYear = java.time.Year.now().getValue();
       if(vehicle == null || newPricePerDay <=0){
       return false;
@@ -82,9 +82,9 @@ public class VehicleManager {
       vehicle.setModel(newModel);
       vehicle.setYear(newYear);
       vehicle.setPricePerDay(newPricePerDay);
-      if(newStatus != null){
-         vehicle.setStatus(newStatus);
-        }
+//      if(newStatus != null){
+//         vehicle.setStatus(newStatus);
+//        }
       return true;
   }
 // the specific update would be in main with cases and setter directly for each one  
