@@ -12,6 +12,7 @@ public class Vehicle_Management_Rental_System {
     private static Customer currentUser = null;
     private static VehicleManager vehicleManager = new VehicleManager();
     private static RentalManager rentalManager = new RentalManager();
+    private static PaymentManager paymentManager = new PaymentManager();
    //=========================================================================
     public static void main(String[] args) {
         mainMenu();
@@ -1072,12 +1073,124 @@ public static void viewVehicleRentals() {
 }
 
     //======================= payment management ==============
-    public static void createPayment(){}
-    public static void viewPaymentById(){}
-    public static void viewCustomerPayments(){}
-    public static void viewRentalPayments(){}
-    public static void viewAllPayments(){}
-    
+public static void createPayment() {
+    System.out.println("\n========== CREATE PAYMENT ==========");
+
+    System.out.print("Enter Rental ID: ");
+    int rentalId = Integer.parseInt(scanner.nextLine());
+
+    Rental rental = rentalManager.getRentalById(rentalId);
+
+    if (rental == null) {
+        System.out.println("Rental not found!");
+        return;
+    }
+
+    System.out.println("Select Payment Method:");
+    System.out.println("1. CASH");
+    System.out.println("2. CARD");
+    System.out.print("Choose: ");
+
+    int methodChoice = Integer.parseInt(scanner.nextLine());
+
+    PaymentMethod paymentMethod;
+
+    switch (methodChoice) {
+        case 1:
+            paymentMethod = PaymentMethod.CASH;
+            break;
+
+        case 2:
+            paymentMethod = PaymentMethod.CARD;
+            break;
+
+        default:
+            System.out.println("Invalid payment method!");
+            return;
+    }
+
+    boolean success =
+            paymentManager.createPayment(rental, paymentMethod);
+
+    if (success) {
+        System.out.println("Payment created successfully.");
+    } else {
+        System.out.println("Payment couldn't be created!");
+    }
+}  
+
+public static void viewPaymentById() {
+    System.out.println("\n========== PAYMENT BY ID ==========");
+
+    System.out.print("Enter Payment ID: ");
+    int paymentId = Integer.parseInt(scanner.nextLine());
+
+    Payment payment = paymentManager.getPaymentById(paymentId);
+
+    if (payment != null) {
+        payment.getDetails();
+    } else {
+        System.out.println("Payment not found!");
+    }
+}
+
+public static void viewCustomerPayments() {
+    System.out.println("\n========== CUSTOMER PAYMENTS ==========");
+
+    System.out.print("Enter Customer ID: ");
+    int customerId = Integer.parseInt(scanner.nextLine());
+
+    ArrayList<Payment> payments =
+            paymentManager.getCustomerPayments(customerId);
+
+    if (payments.isEmpty()) {
+        System.out.println("No payments found for this customer.");
+        return;
+    }
+
+    for (Payment payment : payments) {
+        System.out.println("----------------------------");
+        payment.getDetails();
+    }
+}
+
+public static void viewRentalPayments() {
+
+    System.out.println("\n========== RENTAL PAYMENTS ==========");
+
+    System.out.print("Enter Rental ID: ");
+    int rentalId = Integer.parseInt(scanner.nextLine());
+
+    ArrayList<Payment> payments =
+            paymentManager.getRentalPayments(rentalId);
+
+    if (payments.isEmpty()) {
+        System.out.println("No payments found for this rental.");
+        return;
+    }
+
+    for (Payment payment : payments) {
+        System.out.println("--------------------------------");
+        payment.getDetails();
+    }
+}
+
+public static void viewAllPayments() {
+    System.out.println("\n========== ALL PAYMENTS ==========");
+
+    ArrayList<Payment> payments =
+            paymentManager.getAllPayments();
+
+    if (payments.isEmpty()) {
+        System.out.println("No payments found.");
+        return;
+    }
+
+    for (Payment payment : payments) {
+        System.out.println("----------------------------");
+        payment.getDetails();
+    }
+}    
     //======================= reports management ==============
     public static void vehicleReport(){}
     public static void customerReport(){}
