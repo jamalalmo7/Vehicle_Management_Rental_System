@@ -124,6 +124,23 @@ public class VehicleManager {
         return new ArrayList<>(vehicleList); 
   }
   
+  public ArrayList<Vehicle> searchVehicleByPriceRange(
+        double minPrice, double maxPrice) {
+
+    ArrayList<Vehicle> results = new ArrayList<>();
+
+    for (Vehicle vehicle : vehicleList) {
+
+        if (vehicle.getPricePerDay() >= minPrice
+                && vehicle.getPricePerDay() <= maxPrice) {
+
+            results.add(vehicle);
+        }
+    }
+
+    return results;
+}
+  
  
   }  
     
