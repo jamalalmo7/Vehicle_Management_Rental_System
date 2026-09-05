@@ -13,11 +13,31 @@ public class Vehicle_Management_Rental_System {
     private static VehicleManager vehicleManager = new VehicleManager();
     private static RentalManager rentalManager = new RentalManager();
     private static PaymentManager paymentManager = new PaymentManager();
-   //=========================================================================
+    //=========================================================================
     public static void main(String[] args) {
-        mainMenu();
+        launchGui();
+        /*
+         * ===================================================================
+         * NOTE: The original console-based flow is disabled below, but kept
+         *       (commented) for reference. The application now opens a Swing
+         *       GUI instead. Re-enable "mainMenu();" to return to console mode.
+         * ===================================================================
+         */
+        // mainMenu();
+    }
 
-    
+    /**
+     * Starts the Swing GUI. The GUI layer reuses the same business-logic
+     * classes; it only needs a shared {@code AppContext} to hold the manager
+     * instances.
+     */
+    public static void launchGui() {
+        javax.swing.SwingUtilities.invokeLater(() -> {
+            vehicle_management_rental_system.ui.Theme.installLookAndFeel();
+            var context = new vehicle_management_rental_system.ui.AppContext();
+            var frame = new vehicle_management_rental_system.ui.MainFrame(context);
+            frame.setVisible(true);
+        });
     }
     //======================================================================
     public static void mainMenu(){
