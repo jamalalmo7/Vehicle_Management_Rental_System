@@ -131,7 +131,7 @@ public class MyProfilePanel extends JPanel {
         String oldPass = new String(currentPasswordField.getPassword());
         String newPass = new String(newPasswordField.getPassword());
         if (!newPass.isEmpty()) {
-            boolean ok = c.changePassword(oldPass, newPass);
+            boolean ok = ctx.customerManager().changePassword(c, oldPass, newPass);
             if (!ok) {
                 JOptionPane.showMessageDialog(this,
                         "Current password is incorrect or new password is empty.",

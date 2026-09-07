@@ -2,135 +2,114 @@
 package vehicle_management_rental_system;
 
 import java.util.ArrayList;
-
+import vehicle_management_rental_system.dao.UserDAO;
 
 public class CustomerManager {
-   private final ArrayList<Customer> customerList = new ArrayList<>();
-   
-   public CustomerManager(){
-    Customer admin = new Customer("admin" , "jamal000",Role.ADMIN, "System Admin", "77044825500","admin@gmail.com", "address","111");
-   customerList.add(admin);
-   }
-  
-   
-   public boolean addCustomer(String userName, String password, String name,String phone ,String email ,String address ,String licenseNumber){
-        for(Customer c : customerList){
-        if (c.getUserName().equalsIgnoreCase(userName)){
-         //leave printing to main // System.out.println("Error.. Customer with username : " + userName + " already exists.");
+    private final UserDAO userDAO;
+
+    public CustomerManager() {
+        this.userDAO = new UserDAO();
+        userDAO.ensureDefaultAdmin();
+    }
+
+    public boolean addCustomer(String userName, String password, String name, String phone,
+                               String email, String address, String licenseNumber) {
+        if (userName == null || userName.trim().isEmpty()
+                || password == null || password.trim().isEmpty()) {
             return false;
-            }
-        if(c.getPhone().equals(phone) || c.getLicenseNumber().equals(licenseNumber)){return false;}
         }
-      
-       
-       Customer customer;
-        customer = new Customer(userName, password, Role.CUSTOMER,name, phone, email, address, licenseNumber);
-        customerList.add(customer);
-        return true;
-//        System.out.println("Added customer successfully");
-   }
-    
-   public boolean deleteCustomer(String userName){ // here if he has an active rental we need to remove it as well 
-       //but we cannot reach the rental by the customer we have to search for the rental that has this customer to delete it or if there is no one it's okay then
-       Customer customerToDelete = null;
-   for (Customer c : customerList){
-    if(c.getUserName().equalsIgnoreCase(userName)){
-        customerToDelete = c;
-        break;
+        if (getCustomerByUsername(userName) != null) {
+            return false;
         }
-        
-    }
-   if (customerToDelete != null ){
-       customerList.remove(customerToDelete);
-       
-       return true;
-   }
-   
-        return false;
-   }
-   
-   
-    public Customer getCustomerByUsername(String userName){
-      for(Customer c : customerList){
-          if (c.getUserName().equalsIgnoreCase(userName)){
-             return c;
-          }
-      }
-//      System.out.println("This customer user is not found");
-      return null;
-  }
-    
-    public boolean updateCustomer(Customer customer, String newName, String newPhone, String newEmail, String newAddress, String newLicenseNumber) {
-        if (customer == null) {
-        return false;
+        if (userDAO.existsPhone(phone) || userDAO.existsLicense(licenseNumber)) {
+            return false;
         }
-        for (Customer c : customerList) {
-        
-        if (c.getCustomerId() != customer.getCustomerId()) {
-            if (c.getPhone().equals(newPhone) || c.getLicenseNumber().equalsIgnoreCase(newLicenseNumber)) {
-                return false; 
-            }
-        }
+        return userDAO.registerCustomer(userName, password, name, phone, email, address, licenseNumber);
     }
 
-    
-        customer.setName(newName);
-        customer.setPhone(newPhone);
-        customer.setEmail(newEmail);
-        customer.setAddress(newAddress);
-        customer.setLicenseNumber(newLicenseNumber);
-
-        return true; 
-}
-
-    
-    public ArrayList<Customer> searchCustomer(String keyword){
-        ArrayList<Customer> results = new ArrayList<>();
-        
-        if (keyword == null || keyword.trim().isEmpty()){return results;}
-        // to see if the input is empty or trimed to nothing for check and safety
-        String searchKeyword = keyword.toLowerCase();
-        for(Customer c : customerList){
-            boolean matchName = c.getName()!= null && c.getName().toLowerCase().contains(searchKeyword);
-            boolean matchPhone = c.getPhone()!= null && c.getPhone().toLowerCase().contains(searchKeyword);
-                if(matchName || matchPhone){
-                    results.add(c);
-                }
-            }
-                return results;
-                }
-        
-    public ArrayList<Customer> getAllCustomers(){
-        return new ArrayList<>(customerList);
-    }
-    
-    public int getCustomerCount(){
-    return customerList.size();
-    }
-    
-    
-    //needs tracking and comprehending how it works
-    public Customer authenticateCustomer(String userName, String password){
+    public boolean deleteCustomer(String userName) {
         Customer c = getCustomerByUsername(userName);
-        if (c!= null && c.login(userName, password)){
-        return c;
+        if (c == null) {
+            return false;
+        }
+        return userDAO.deleteCustomer(c.getCustomerId());
+    }
+
+    public Customer getCustomerByUsername(String userName) {
+        return userDAO.getCustomerByUsername(userName);
+    }
+
+    public boolean updateCustomer(Customer customer, String newName, String newPhone,
+                                  String newEmail, String newAddress, String newLicenseNumber) {
+        if (customer == null) {
+            return false;
+        }
+        int id = customer.getCustomerId();
+        if (userDAO.existsPhoneExcluding(newPhone, id)
+                || userDAO.existsLicenseExcluding(newLicenseNumber, id)) {
+            return false;
+        }
+        boolean ok = userDAO.updateCustomer(id, newName, newPhone, newEmail, newAddress, newLicenseNumber);
+        if (ok) {
+            customer.setName(newName);
+            customer.setPhone(newPhone);
+            customer.setEmail(newEmail);
+            customer.setAddress(newAddress);
+            customer.setLicenseNumber(newLicenseNumber);
+        }
+        return ok;
+    }
+
+    public ArrayList<Customer> searchCustomer(String keyword) {
+        if (keyword == null || keyword.trim().isEmpty()) {
+            return new ArrayList<>();
+        }
+        return userDAO.searchCustomers(keyword);
+    }
+
+    public ArrayList<Customer> getAllCustomers() {
+        return userDAO.getAllCustomers();
+    }
+
+    public int getCustomerCount() {
+        return userDAO.getCustomerCount();
+    }
+
+    public Customer authenticateCustomer(String userName, String password) {
+        Customer c = getCustomerByUsername(userName);
+        if (c != null && c.login(userName, password)) {
+            return c;
         }
         return null;
     }
-    
-    public boolean updateUsername(Customer customer, String newUsername){
-        if(customer == null || newUsername == null || newUsername.trim().isEmpty()){
+
+    public boolean updateUsername(Customer customer, String newUsername) {
+        if (customer == null || newUsername == null || newUsername.trim().isEmpty()) {
             return false;
         }
-        String trimmedUsername = newUsername.trim();
-        
-        for(Customer c : customerList){
-            if(c.getCustomerId() != customer.getCustomerId()){
-                if((c.getUserName().equalsIgnoreCase(trimmedUsername))){
-                return false;}
-            }
+        String trimmed = newUsername.trim();
+        Customer existing = getCustomerByUsername(trimmed);
+        if (existing != null && existing.getCustomerId() != customer.getCustomerId()) {
+            return false;
         }
-       customer.setUserName(trimmedUsername);
-       return true;
+        boolean ok = userDAO.updateUsername(customer.getCustomerId(), trimmed);
+        if (ok) {
+            customer.setUserName(trimmed);
+        }
+        return ok;
+    }
+
+    public boolean changePassword(Customer customer, String oldPassword, String newPassword) {
+        if (customer == null) {
+            return false;
+        }
+        if (!customer.login(customer.getUserName(), oldPassword)) {
+            return false;
+        }
+        boolean ok = userDAO.updatePassword(customer.getCustomerId(), newPassword);
+        if (ok && customer.changePassword(oldPassword, newPassword)) {
+            return true;
+        }
+        return ok;
     }
 }

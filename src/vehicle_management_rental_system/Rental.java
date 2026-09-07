@@ -7,7 +7,7 @@ import java.time.temporal.ChronoUnit;
 
 public class Rental {
     private static int idCounter = 0;
-    private final int rentalId; 
+    private int rentalId; 
     private LocalDate startDate;
     private LocalDate endDate;
     private double totalPrice;
@@ -36,6 +36,10 @@ public class Rental {
 
     public int getRentalId() {
         return rentalId;
+    }
+
+    public void setRentalId(int rentalId) {
+        this.rentalId = rentalId;
     }
 
     public LocalDate getStartDate() {

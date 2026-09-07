@@ -39,7 +39,7 @@ public class AdminDashboardPanel extends JPanel {
 
         add(buildHeader(), BorderLayout.NORTH);
 
-        // ---- Card area ----
+        // Card area
         cardLayout = new CardLayout();
         cardPanel = new JPanel(cardLayout);
 
@@ -55,7 +55,7 @@ public class AdminDashboardPanel extends JPanel {
         cardPanel.add(paymentPanel, PAYMENTS);
         cardPanel.add(reportsPanel, REPORTS);
 
-        // ---- Sidebar ----
+        //Sidebar -
         SideNavList nav = new SideNavList(
                 "Vehicle Management",
                 "Customer Management",

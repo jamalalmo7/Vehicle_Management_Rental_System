@@ -2,167 +2,110 @@ package vehicle_management_rental_system;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import vehicle_management_rental_system.dao.RentalDAO;
+import vehicle_management_rental_system.dao.VehicleDAO;
 
 public class RentalManager {
 
-    private ArrayList<Rental> rentalList = new ArrayList<>();
+    private final RentalDAO rentalDAO;
+    private final VehicleDAO vehicleDAO;
+
+    public RentalManager() {
+        this.rentalDAO = new RentalDAO();
+        this.vehicleDAO = new VehicleDAO();
+    }
 
     public boolean createRental(Customer customer, Vehicle vehicle, LocalDate startDate, LocalDate endDate) {
-         if(customer == null || vehicle == null || startDate == null || endDate == null){
-             return false;
-         }
+        if (customer == null || vehicle == null || startDate == null || endDate == null) {
+            return false;
+        }
         if (endDate.isBefore(startDate) || endDate.isEqual(startDate)) {
             return false;
         }
-         
-        if (vehicle.isAvailable()) {
-            int duration = Rental.calculateDuration(startDate, endDate);
-
-            double totalPrice = vehicle.calculateCost(duration);
-
-            Rental rental = new Rental(customer, vehicle, startDate, endDate, totalPrice,
-                    RentalStatus.ACTIVE);
-
-            vehicle.setStatus(VehicleStatus.RENTED);
-            rentalList.add(rental);
-            return true;
-        }
+        if (!vehicle.isAvailable()) {
             return false;
+        }
+        int duration = Rental.calculateDuration(startDate, endDate);
+        double totalPrice = vehicle.calculateCost(duration);
+
+        int userId = customer.getCustomerId();
+        if (userId <= 0) {
+            return false;
+        }
+        boolean ok = rentalDAO.createRental(userId, vehicle.getId(), startDate, endDate, totalPrice);
+        if (ok) {
+            vehicle.setStatus(VehicleStatus.RENTED);
+            vehicleDAO.updateVehicleStatus(vehicle.getId(), VehicleStatus.RENTED.name());
+        }
+        return ok;
     }
 
     public boolean cancelRental(int rentalId) {
         Rental r = getRentalById(rentalId);
-        if (r != null) {
-            return r.cancelRental();
+        if (r == null || r.getStatus() != RentalStatus.ACTIVE) {
+            return false;
         }
-            // it was replaced all of this by the fun cancelRental in Rental class  to change the statuses 
-            
-//            if (r.getStatus() == RentalStatus.ACTIVE) {
-//                r.setStatus(RentalStatus.CANCELLED);
-//                r.getVehicle().setStatus(VehicleStatus.AVAILABLE);
-//                System.out.println("Cancelled rental successfully");
-//                return;
-//            }
-//            System.out.println("This rental is inactive.");
-//            return;
-        
-        return false;
+        boolean ok = rentalDAO.updateRentalStatus(rentalId, RentalStatus.CANCELLED.name());
+        if (ok && r.getVehicle() != null) {
+            r.getVehicle().setStatus(VehicleStatus.AVAILABLE);
+            vehicleDAO.updateVehicleStatus(r.getVehicle().getId(), VehicleStatus.AVAILABLE.name());
+            r.setStatus(RentalStatus.CANCELLED);
+        }
+        return ok;
     }
 
     public boolean returnVehicle(int rentalId) {
         Rental r = getRentalById(rentalId);
-        if (r != null) {
-            return r.completeRental();
-        }
-//            if (r.getStatus() == RentalStatus.ACTIVE) {
-//                r.setStatus(RentalStatus.COMPLETED);
-//                r.getVehicle().setStatus(VehicleStatus.AVAILABLE);
-//                System.out.println("Rental finished successfully");
-//                return;
-//            }
-//            System.out.println("This rental is inactive.");
-//            return;
-        
+        if (r == null || r.getStatus() != RentalStatus.ACTIVE) {
             return false;
+        }
+        boolean ok = rentalDAO.updateRentalStatus(rentalId, RentalStatus.COMPLETED.name());
+        if (ok && r.getVehicle() != null) {
+            r.getVehicle().setStatus(VehicleStatus.AVAILABLE);
+            vehicleDAO.updateVehicleStatus(r.getVehicle().getId(), VehicleStatus.AVAILABLE.name());
+            r.setStatus(RentalStatus.COMPLETED);
+        }
+        return ok;
     }
 
     public Rental getRentalById(int rentalId) {
-        if(rentalId <=0){
+        if (rentalId <= 0) {
             return null;
         }
-        for (Rental r : rentalList) {
-            if (r.getRentalId() == rentalId) {
-                return r;
-            }
-        }
-        return null;
+        return rentalDAO.getRentalById(rentalId);
     }
 
     public ArrayList<Rental> searchRental(String keyword) {
-        ArrayList<Rental> results = new ArrayList<>();
         if (keyword == null || keyword.trim().isEmpty()) {
-            return results;
+            return new ArrayList<>();
         }
-        String searchKeyword = keyword.toLowerCase();
-        for (Rental r : rentalList) {
-            boolean matchCustomerName = r.getCustomer() != null && r.getCustomer().getName() != null
-                    && r.getCustomer().getName().toLowerCase().contains(searchKeyword);
-
-            boolean matchCustomerUsername = r.getCustomer() != null && r.getCustomer().getUserName() != null
-                    && r.getCustomer().getUserName().toLowerCase().contains(searchKeyword);
-
-            boolean matchVehicleBrand = r.getVehicle() != null && r.getVehicle().getBrand() != null
-                    && r.getVehicle().getBrand().toLowerCase().contains(searchKeyword);
-
-            boolean matchVehicleModel = r.getVehicle() != null && r.getVehicle().getModel() != null
-                    && r.getVehicle().getModel().toLowerCase().contains(searchKeyword);
-
-            boolean matchVehicleType = r.getVehicle() != null && r.getVehicle().getType() != null
-                    && r.getVehicle().getType().name().toLowerCase().contains(searchKeyword);
-
-            if (matchCustomerName || matchCustomerUsername
-                    || matchVehicleBrand || matchVehicleModel
-                    || matchVehicleType) {
-                results.add(r);
-            }
-        }
-        return results;
-
+        return rentalDAO.searchRentals(keyword);
     }
 
     public ArrayList<Rental> getAllRentals() {
-        return new ArrayList<>(rentalList);
+        return rentalDAO.getAllRentals();
     }
 
     public ArrayList<Rental> getActiveRentals() {
-        ArrayList<Rental> results = new ArrayList<>();
-        for (Rental r : rentalList) {
-            if (r.getStatus() == RentalStatus.ACTIVE) {
-                results.add(r);
-            }
-        }
-        return results;
+        return rentalDAO.getActiveRentals();
     }
 
     public ArrayList<Rental> getCompletedRentals() {
-        ArrayList<Rental> results = new ArrayList<>();
-        for (Rental r : rentalList) {
-            if (r.getStatus() == RentalStatus.COMPLETED) {
-                results.add(r);
-            }
-        }
-        return results;
+        return rentalDAO.getCompletedRentals();
     }
 
     public ArrayList<Rental> getCustomerRentals(String username) {
-        ArrayList<Rental> results = new ArrayList<>();
         if (username == null || username.trim().isEmpty()) {
-            return results;
+            return new ArrayList<>();
         }
-        String cleanUsername = username.trim();
-        for (Rental r : rentalList) {
-            if (r.getCustomer() != null && r.getCustomer().getUserName() != null) {
-                if (r.getCustomer().getUserName().equalsIgnoreCase(cleanUsername)) {
-                    results.add(r);
-                }
-            }
-
-        }
-        return results;
+        return rentalDAO.getUserRentalsByUsername(username);
     }
 
     public ArrayList<Rental> getVehicleRentals(int vehicleId) {
-        ArrayList<Rental> results = new ArrayList<>();
-        for (Rental r : rentalList) {
-            if (r.getVehicle() != null && r.getVehicle().getId() == vehicleId) {
-                results.add(r);
-            }
-        }
-        return results;
+        return rentalDAO.getVehicleRentals(vehicleId);
     }
 
     public int getRentalCount() {
-        return rentalList.size();
+        return rentalDAO.getRentalCount();
     }
-
 }

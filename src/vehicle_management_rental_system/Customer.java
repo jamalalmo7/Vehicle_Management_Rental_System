@@ -4,7 +4,7 @@ package vehicle_management_rental_system;
 
 public class Customer extends User {
     private static int CountId = 0;
-    private final int customerId;
+    private int customerId;
     private String name;
     private String phone;
     private String email;
@@ -23,6 +23,10 @@ public class Customer extends User {
 
     public int getCustomerId() {
         return customerId;
+    }
+
+    public void setCustomerId(int customerId) {
+        this.customerId = customerId;
     }
 
     public String getName() {

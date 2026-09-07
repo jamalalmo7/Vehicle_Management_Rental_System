@@ -6,7 +6,7 @@ import java.time.LocalDate;
 
 public class Payment {
     private static int CountId  = 0;
-    private final int paymentId;
+    private int paymentId;
     private Rental rental;
     private double amount;
     private LocalDate paymentDate;
@@ -24,6 +24,10 @@ public class Payment {
 
     public int getPaymentId() {
         return paymentId;
+    }
+
+    public void setPaymentId(int paymentId) {
+        this.paymentId = paymentId;
     }
 
     public Rental getRental() {

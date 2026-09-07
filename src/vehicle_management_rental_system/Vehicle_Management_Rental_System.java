@@ -1743,7 +1743,7 @@ public static void viewMyProfile() {
     String newPassword = scanner.nextLine();
 
     boolean success =
-            currentUser.changePassword(oldPassword, newPassword);
+            customerManager.changePassword(currentUser, oldPassword, newPassword);
 
     if (success) {
         System.out.println("Password changed successfully.");

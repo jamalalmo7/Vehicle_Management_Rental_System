@@ -4,7 +4,7 @@ package vehicle_management_rental_system;
 
 public class Vehicle {
     public static int countId = 0;
-    private final int id;
+    private int id;
     private VehicleType type;// enum 
     private String brand;
     private String model;
@@ -27,6 +27,10 @@ public class Vehicle {
 
     public int getId() {
         return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public VehicleType getType() {

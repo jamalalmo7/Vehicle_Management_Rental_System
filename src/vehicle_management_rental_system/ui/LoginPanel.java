@@ -30,7 +30,6 @@ public class LoginPanel extends JPanel {
         setBackground(Theme.BG);
         setLayout(new GridBagLayout());
 
-        // ---- Centered card ----
         JPanel card = new JPanel(new GridBagLayout());
         card.setBackground(Theme.CARD);
         card.setBorder(BorderFactory.createCompoundBorder(
